@@ -74,7 +74,7 @@ public class HealthHider implements Listener {
             
             private void processDataWatcher(WrappedDataWatcher watcher) {
                 if(watcher != null && watcher.hasIndex(7) && watcher.getFloat(7) != 0){ // 2 is name index
-                    watcher.setObject(7, Float.valueOf(1));
+                    watcher.setObject(7, Float.valueOf(Config.FAKE_HEALTH_VALUE.getInt())); // health value
                 }
             }
         };

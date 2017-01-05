@@ -1,8 +1,11 @@
 name: NoMoreESP
 main: tw.mics.spigot.plugin.nomoreesp.NoMoreESP
-version: ${project.version}
-description: ${project.description}
+version: 2.0.1-fork
+description: NoMoreESP
 author: Mics
 website: https://mics.tw
-
 depend: [ProtocolLib]
+permissions:
+  nomoreesp.hide-entity.bypass:
+    description: Bypass mode to hide-entity
+    default: op

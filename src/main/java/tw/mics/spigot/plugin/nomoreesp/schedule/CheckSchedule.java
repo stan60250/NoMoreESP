@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -13,7 +14,6 @@ import tw.mics.spigot.plugin.nomoreesp.Config;
 import tw.mics.spigot.plugin.nomoreesp.EntityHider;
 import tw.mics.spigot.plugin.nomoreesp.NoMoreESP;
 import tw.mics.spigot.plugin.nomoreesp.runnable.CheckHideEntityRunnable;
-import tw.mics.spigot.plugin.nomoreesp.runnable.CheckXRayRunnable;
 
 public class CheckSchedule {
     NoMoreESP plugin;
@@ -52,6 +52,15 @@ public class CheckSchedule {
                                 Player player = iter_online_player.next();
                                 if(!player.isOnline() || !player.isValid())
                                     continue;
+                                
+                                //check bypass
+                                if(
+                                		(Config.HIDE_ENTITY_BYPASS_OP.getBoolean() && player.isOp()) || //bypass op
+                                		(Config.HIDE_ENTITY_BYPASS_SPECTATOR.getBoolean() && player.getGameMode().equals(GameMode.SPECTATOR)) || //bypass spectator
+                                		(Config.HIDE_ENTITY_BYPASS_BY_PERMISSION.getBoolean() && player.hasPermission("nomoreesp.hide-entity.bypass")) //bypass by permission
+                                )
+                                	continue;
+                                	
                                 //hideentity
                                 if(
                                         Config.HIDE_ENTITY_ENABLE.getBoolean() && 
@@ -69,14 +78,6 @@ public class CheckSchedule {
                                     });
                                 }
                                 
-                                //xray
-                                if(
-                                        Config.XRAY_DETECT_ENABLE.getBoolean() && 
-                                        Config.XRAY_DETECT_ENABLE_WORLDS.getStringList().contains(player.getWorld().getName())
-                                ){
-                                    Bukkit.getScheduler().runTaskAsynchronously(NoMoreESP.getInstance(), 
-                                            new CheckXRayRunnable(player));
-                                }
                             }
                             Thread.sleep(200);
                         }
