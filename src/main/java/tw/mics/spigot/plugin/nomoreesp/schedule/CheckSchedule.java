@@ -8,7 +8,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 
 import tw.mics.spigot.plugin.nomoreesp.Config;
 import tw.mics.spigot.plugin.nomoreesp.EntityHider;
@@ -61,7 +63,7 @@ public class CheckSchedule {
                                 )
                                 	continue;
                                 	
-                                //hideentity
+                                //hide entity
                                 if(
                                         Config.HIDE_ENTITY_ENABLE.getBoolean() && 
                                         Config.HIDE_ENTITY_ENABLE_WORLDS.getStringList().contains(player.getWorld().getName())
@@ -72,7 +74,16 @@ public class CheckSchedule {
                                     
                                     nearbyEntities.remove(player);
                                     nearbyEntities.forEach(target -> {
-                                    if(hide_list.contains(target.getType()))
+                                    if(
+                                    		//target in hide list
+                                    		hide_list.contains(target.getType()) &&
+                                    		
+                                    		//target without glowing PotionEffect
+                                    		!(
+                                    			target instanceof LivingEntity &&
+                                    			((LivingEntity)target).hasPotionEffect(PotionEffectType.GLOWING)
+                                    		) 
+                                    ) 
                                         Bukkit.getScheduler().runTaskAsynchronously(NoMoreESP.getInstance(), 
                                                 new CheckHideEntityRunnable(hider, player, target));
                                     });
