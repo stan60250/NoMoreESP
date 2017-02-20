@@ -78,11 +78,14 @@ public class CheckSchedule {
                                     		//target in hide list
                                     		hide_list.contains(target.getType()) &&
                                     		
+                                    		//target without glowing
+                                    		!target.isGlowing() &&
+                                    		
                                     		//target without glowing PotionEffect
                                     		!(
                                     			target instanceof LivingEntity &&
                                     			((LivingEntity)target).hasPotionEffect(PotionEffectType.GLOWING)
-                                    		) 
+                                    		)
                                     ) 
                                         Bukkit.getScheduler().runTaskAsynchronously(NoMoreESP.getInstance(), 
                                                 new CheckHideEntityRunnable(hider, player, target));

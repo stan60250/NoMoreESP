@@ -13,8 +13,8 @@ import tw.mics.spigot.plugin.nomoreesp.NoMoreESP;
 
 
 public class CheckHideEntityRunnable implements Runnable {
-    final double DONT_HIDE_RANGE = 4;  // å…©é‚Šéƒ½æœƒæœ‰ä½œç”¨ ä¹Ÿå°±æ˜¯å¯¦éš›è·é›¢æ˜¯å…©å€
-    final double HIDE_DEGREES = 60;    // æ­¤è§’åº¦å¤–å‰‡éš±è—
+    final double DONT_HIDE_RANGE = 4;  // ¨âÃä³£·|¦³§@¥Î ¤]´N¬O¹ê»Ú¶ZÂ÷¬O¨â­¿
+    final double HIDE_DEGREES = 60;    // ¦¹¨¤«×¥~«hÁôÂÃ
     
     EntityHider hider;
     Player player;
@@ -32,8 +32,18 @@ public class CheckHideEntityRunnable implements Runnable {
     
     @Override
     public void run() {
-        double distance = loc.distance(target_loc);
+        double distance = 0;
         double checked_distance = 0;
+        
+        //if they are in the same world
+        if(this.player.getLocation().getWorld().equals(this.target.getLocation().getWorld())){
+        	//calc distance
+        	distance = loc.distance(target_loc);
+        }else{
+        	//different world, show
+        	this.showEntity(player, target);
+            return;
+        }
 
         // too far, force hide
         if(distance > Config.HIDE_ENTITY_HIDE_RANGE.getInt()){
@@ -47,7 +57,7 @@ public class CheckHideEntityRunnable implements Runnable {
             return;
         }
 
-        // è¨ˆç®—+1
+        // ­pºâ+1
         Vector vector = target_loc.subtract(loc).toVector();
         
         double x = Math.abs(vector.getX());
@@ -61,7 +71,7 @@ public class CheckHideEntityRunnable implements Runnable {
             vector.multiply(1/z);
         }
         
-        // åœ¨è¦–è§’å¤–å‰‡éš±è—
+        // ¦bµø¨¤¥~«hÁôÂÃ
         Vector A = vector;
         Vector B = loc.getDirection();
         double degrees = Math.toDegrees(Math.acos(B.dot(A)/vector.length()));
@@ -71,7 +81,7 @@ public class CheckHideEntityRunnable implements Runnable {
         }
 
         
-        // åˆ¤æ–·æ˜¯å¦è¢«æ–¹å¡Šæ“‹ä½
+        // §PÂ_¬O§_³Q¤è¶ô¾×¦í
         checked_distance += vector.length();
         loc.add(vector);
         while (checked_distance < distance) {
